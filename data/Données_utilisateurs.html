@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Données utilisateurs — privé</title>
+  <link rel="stylesheet" href="../css/page_web.csss">
+  <style>
+    .wrap{max-width:1100px;margin:22px auto;padding:18px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border:1px solid rgba(10,20,40,0.06);text-align:left}
+    th{background:#f5f7fb;font-weight:800}
+    .muted{color:#666;font-size:0.95rem}
+    .small{font-size:0.9rem;color:#444}
+    .actions-btn{padding:6px 8px;border-radius:6px;border:1px solid rgba(10,20,40,0.06);background:#fff;cursor:pointer}
+    .danger{background:#fbeaea;border-color:#f0b4b4}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <h1 class="site-title">Données utilisateurs (privé)</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <p id="access-msg" class="muted">Vérification en cours...</p>
+
+    <div id="content" style="display:none">
+      <p class="muted">Page de consultation locale des comptes créés (stockage local). Mot de passe stocké en clair ici pour démonstration — ne pas utiliser en production.</p>
+
+      <div id="no-data" class="muted">Chargement...</div>
+      <div id="table-wrap" style="display:none">
+        <table id="usersTable" aria-live="polite">
+          <thead>
+            <tr><th>ID</th><th>Identifiant</th><th>E‑mail</th><th>Newsletter</th><th>Créé le</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div style="margin-top:12px">
+          <button id="btnClear" class="btn btn-ghost">Effacer toutes les données (localStorage)</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function loadUsers(){ try{ return JSON.parse(localStorage.getItem('users_demo')||'[]'); }catch(e){return[];} }
+    function saveUsers(users){ localStorage.setItem('users_demo', JSON.stringify(users)); }
+
+    // Access control: only creator (Azura) can view/manage
+    (function checkAccess(){
+      try{
+        const cur = JSON.parse(localStorage.getItem('current_user_demo')||'null');
+        if(!cur || !cur.username || cur.username.toLowerCase() !== 'azura'){
+          document.getElementById('access-msg').innerHTML = 'Accès restreint — vous devez être connecté en tant que Créateur (<strong>Azura</strong>). <a href="Connection.html">Se connecter</a>';
+          document.getElementById('content').style.display = 'none';
+          return;
+        }
+        document.getElementById('access-msg').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        render();
+      }catch(e){
+        document.getElementById('access-msg').textContent = 'Erreur d\'accès.';
+      }
+    })();
+
+    function render(){
+      const users = loadUsers();
+      const no = document.getElementById('no-data');
+      const wrap = document.getElementById('table-wrap');
+      if(!users.length){ no.textContent='Aucun utilisateur enregistré.'; wrap.style.display='none'; return; }
+      no.style.display='none'; wrap.style.display='block';
+      const tbody = document.querySelector('#usersTable tbody'); tbody.innerHTML='';
+      users.forEach(u=>{
+        const tr = document.createElement('tr');
+        const created = u.created ? new Date(u.created).toLocaleString() : '';
+        const newsletter = u.newsletter ? 'Oui' : 'Non';
+        const username = u.username || '';
+        const email = u.email || '';
+        tr.innerHTML = `<td>${u.id}</td>
+                        <td>${escapeHtml(username)}</td>
+                        <td>${escapeHtml(email)}</td>
+                        <td>${newsletter}</td>
+                        <td>${created}</td>
+                        <td>
+                          <button class="actions-btn" onclick="editUser('${u.id}')">Modifier</button>
+                          <button class="actions-btn danger" onclick="deleteUser('${u.id}')">Supprimer</button>
+                        </td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+
+    function editUser(id){
+      const users = loadUsers();
+      const u = users.find(x=>x.id===id);
+      if(!u) return alert('Utilisateur introuvable.');
+      const newEmail = prompt('Nouvel e‑mail', u.email||'') || u.email;
+      const newUsername = prompt('Nouvel identifiant', u.username||'') || u.username;
+      const newNewsletter = confirm('Abonné à la newsletter ? (OK = Oui, Annuler = Non)') ? true : false;
+      u.email = newEmail;
+      u.username = newUsername;
+      u.newsletter = newNewsletter;
+      saveUsers(users);
+      render();
+      alert('Utilisateur mis à jour.');
+    }
+
+    function deleteUser(id){
+      if(!confirm('Supprimer cet utilisateur ?')) return;
+      const users = loadUsers().filter(u=>u.id!==id);
+      saveUsers(users);
+      render();
+    }
+
+    document.getElementById('btnClear').addEventListener('click', ()=>{
+      if(!confirm('Effacer toutes les données utilisateurs (localStorage) ?')) return;
+      localStorage.removeItem('users_demo'); localStorage.removeItem('current_user_demo'); render();
+      document.getElementById('no-data').textContent = 'Aucun utilisateur enregistré.';
+    });
+  </script>
+</body>
+</html>
