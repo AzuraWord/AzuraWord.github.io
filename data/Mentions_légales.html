@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mentions légales — Kit éducatif</title>
-  <link rel="stylesheet" href="../css/page_web.css">
+  <link rel="stylesheet" href="../css/page_web2.css">
 </head>
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <h1 class="site-title">kit éducatif pour l'école primaire</h1>
+      <h1 class="site-title">L'école dans ta poche</h1>
     </div>
   </header>
 
@@ -22,11 +22,7 @@
         <a class="tab" href="Cycle_3.html" role="tab">Cycle 3</a>
       </div>
 
-      <div class="search-wrapper">
-        <label for="site-search" class="sr-only">Barre de recherche</label>
-        <input id="site-search" class="site-search" type="search" placeholder="Rechercher..." aria-autocomplete="list" aria-controls="search-suggestions" autocomplete="off">
-        <ul id="search-suggestions" class="suggestions" role="listbox" aria-label="Suggestions de recherche"></ul>
-      </div>
+      <!-- recherche retirée -->
     </div>
   </div>
 
@@ -92,8 +88,8 @@
       <li>Loi n°78‑17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés (modifiée). Disponible : <a href="https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000886460/" target="_blank" rel="noopener">legifrance.gouv.fr</a></li>
       <li>Recommandations CNIL sur les cookies et traceurs. Disponible : <a href="https://www.cnil.fr/" target="_blank" rel="noopener">cnil.fr</a></li>
     </ol>
-    <p style="margin-top:12px">Date de mise à jour : 04/11/2025</p>
-    <p style="margin-top:8px;font-size:0.95rem">
+    <p class="mt-12">Date de mise à jour : 04/11/2025</p>
+    <p class="mt-8 font-sm">
       Réalisé avec <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a> par Laura GALDEANO, étudiante Master MEEF, INSPE Aix‑Marseille Université.
     </p>
   </div>
@@ -105,53 +101,28 @@
       tabs.forEach(t => { if (t.getAttribute('href').toLowerCase() === name) t.classList.add('active'); });
     })();
 
-    (function(){
-      const input = document.getElementById('site-search');
-      const sugg = document.getElementById('search-suggestions');
-      const STORAGE_KEY = 'site_search_history_v1';
-      const siteIndex = [
-        'Français','Mathématiques','Motricité','Arts plastiques','Education musicale',
-        'Explorer le monde','Le temps','L\'espace','Le vivant','La matière',
-        'Enseignement moral et civique','Education à la vie affective et relationnelle',
-        'Langues vivantes','Histoire','Géographie','Sciences et technologies','EPS'
-      ];
-      function loadHistory(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; } }
-      function saveHistory(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0,20))); }
-      function makeSuggestionList(q){
-        const hist = loadHistory().filter(h => h.toLowerCase().includes(q.toLowerCase()));
-        const indexed = siteIndex.filter(k => k.toLowerCase().includes(q.toLowerCase()) && !hist.includes(k)).slice(0,8);
-        return [...hist, ...indexed].slice(0,8);
-      }
-      function renderSuggestions(items){
-        sugg.innerHTML = '';
-        if (!items.length) { sugg.style.display = 'none'; return; }
-        items.forEach(it => {
-          const li = document.createElement('li');
-          li.textContent = it; li.tabIndex = 0;
-          li.addEventListener('click', () => selectSuggestion(it));
-          li.addEventListener('keydown', e => { if (e.key==='Enter') selectSuggestion(it); });
-          sugg.appendChild(li);
-        });
-        sugg.style.display = 'block';
-      }
-      function selectSuggestion(value){ input.value = value; addToHistory(value); sugg.style.display = 'none'; input.focus(); }
-      function addToHistory(q){ if (!q || !q.trim()) return; const list = loadHistory(); const idx = list.findIndex(x => x.toLowerCase()===q.toLowerCase()); if (idx !== -1) list.splice(idx,1); list.unshift(q); saveHistory(list); }
-      input.addEventListener('input', e => {
-        const q = e.target.value.trim();
-        if (!q) { renderSuggestions(loadHistory().slice(0,6)); return; }
-        renderSuggestions(makeSuggestionList(q));
-      });
-      input.addEventListener('focus', () => { renderSuggestions(loadHistory().slice(0,6)); });
-      input.addEventListener('blur', () => { setTimeout(()=>{ sugg.style.display = 'none'; }, 150); });
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          const q = input.value.trim(); if (!q) return; addToHistory(q);
-          const target = { 'cycle 1':'Cycle_1.html','cycle 2':'Cycle_2.html','cycle 3':'Cycle_3.html',
-                           'cycle_1':'Cycle_1.html','cycle_2':'Cycle_2.html','cycle_3':'Cycle_3.html' }[q.toLowerCase()];
-          if (target) location.href = target; else alert('Recherche enregistrée : ' + q);
-        }
-      });
-    })();
+    // recherche retirée
   </script>
+  
+  <footer class="site-footer" role="contentinfo" aria-label="Pied de page">
+    <div class="footer-panels">
+      <div class="footer-panel panel-left" aria-hidden="false">
+        <h4>A propos</h4>
+        <ol>
+          <li><a href="Sources.html">Références et documents officiels</a></li>
+          <li><a href="Mentions_légales.html">Informations légales</a></li>
+          
+          <li><a href="Conditions_utilisation.html">Conditions d'utilisation</a></li>
+        </ol>
+      </div>
+
+      <div class="footer-panel panel-right" aria-hidden="false">
+        <h4>Aide</h4>
+        <ol>
+          <li><a href="Formulaire_contact.html">Contact</a></li>
+        </ol>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

@@ -4,11 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>kit éducatif pour l'école primaire — Accueil</title>
-  <link rel="stylesheet" href="../css/page_web.css">
     <style>
     /* largeur alignée sur Home : max-width 920px */
     :root{
-      --max-width:920px; /* same as Home */
+      /* page-level variables: max-width is centralized in ../css/page_web2.css */
       --bg:#f6f8fb;
       --card-bg:#ffffff;
       --muted:#6b6b6b;
@@ -30,27 +29,26 @@
     }
 
     /* Conteneur central : identique à Home */
-    .tabs-bar, .site-header-inner, footer .footer-panels {
-      max-width: var(--max-width);
+    .site-header-inner, footer .footer-panels {
       margin: 0 auto;
       padding: 0 20px;
       box-sizing: border-box;
     }
 
-    main#main{ max-width:var(--max-width); margin:24px auto; padding:0 20px; box-sizing:border-box; }
+    /* main#main uses the central .container rules from ../css/page_web2.css */
 
     /* Card visuel */
     .card{
       background: var(--card-bg);
       border-radius:12px;
-      border:1px solid rgba(10,20,40,0.05);
-      box-shadow: 0 10px 30px rgba(20,30,50,0.05);
+      border:2px solid rgba(10,20,40,0.30); /* trait très foncé pour démarcation forte */
+      box-shadow: 0 18px 46px rgba(20,30,50,0.16);
       padding:26px;
       margin-bottom:20px;
     }
 
     /* Form centré et dimensionné comme Home content */
-    .account-area{ max-width:var(--max-width); margin: 0 auto; }
+    /* .account-area width handled by css/page_web2.css (centralized) */
 
     .form-grid{
       display:flex;
@@ -68,24 +66,31 @@
       display:block;
     }
 
+    /* Inputs: stronger contrast and clearer writing areas */
     .form-grid input[type="email"],
     .form-grid input[type="text"],
     .form-grid textarea{
       width:100%;
       padding:14px 16px;
       border-radius:12px;
-      border:1px solid rgba(15,25,45,0.06);
-      background:#fbfdff;
+      border:2px solid rgba(15,25,45,0.34); /* trait très foncé pour champs */
+      background:#ffffff;
       font-size:1rem;
       box-sizing:border-box;
-      transition: box-shadow .15s ease, border-color .15s ease;
+      transition: box-shadow .15s ease, border-color .15s ease, background .12s ease;
+      box-shadow: inset 0 -2px 6px rgba(0,0,0,0.03);
     }
+
+    .form-grid input::placeholder, .form-grid textarea::placeholder{ color: rgba(15,25,45,0.5); }
 
     .form-grid input:focus, .form-grid textarea:focus{
       outline: none;
-      border-color: rgba(43,108,176,0.9);
-      box-shadow: 0 8px 22px rgba(43,108,176,0.08);
+      border-color: rgba(43,108,176,0.95);
+      box-shadow: 0 10px 30px rgba(43,108,176,0.10);
+      background:#fff;
     }
+
+    .form-grid textarea{ min-height:160px; resize:vertical; }
 
     .small-muted{ color: var(--muted); font-size:0.95rem; }
 
@@ -97,7 +102,7 @@
       box-shadow: 0 10px 24px rgba(212,58,97,0.16);
     }
 
-    .msg-list{ margin-top:18px; border-top:1px dashed rgba(10,20,40,0.06); padding-top:12px; }
+    .msg-list{ margin-top:18px; border-top:2px dashed rgba(10,20,40,0.18); padding-top:12px; }
     .msg-item{ padding:14px; border-radius:10px; margin-bottom:12px; background:#fbfbff; display:flex; gap:18px; align-items:flex-start; border:1px solid rgba(10,20,40,0.03); }
     .msg-meta{ width:260px; color:#333; font-size:0.94rem; }
     .msg-body{ flex:1; white-space:pre-wrap; word-break:break-word; }
@@ -108,27 +113,25 @@
     .badge.read{ background:#eaf7ef; color:#1e7b4b; }
 
     @media (max-width:1000px){
-      :root{ --max-width:920px; }
       main#main{ padding:0 16px; }
       .form-grid{ max-width:100%; padding:0 8px; }
       .msg-meta{ width:180px; }
     }
     @media (max-width:760px){
       .msg-meta{ width:140px; font-size:0.9rem; }
-      .account-area{ padding:12px; margin:12px; }
+      .account-area{ padding:12px; }
       .card{ padding:14px; }
       .form-actions{ justify-content:flex-end; }
     }
-  </style>
+    </style>
+  <link rel="stylesheet" href="../css/page_web2.css">
 </head>
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <h1 class="site-title">kit éducatif pour l'école primaire</h1>
+      <h1 class="site-title">L'école dans ta poche</h1>
 
-      <a href="Connection.html" class="account-link" title="Se connecter" style="margin-left:auto;display:inline-flex;align-items:center;">
-        <img src="https://cdn-icons-png.flaticon.com/512/5087/5087592.png" alt="Se connecter" style="width:36px;height:36px;display:block;border-radius:6px;border:1px solid rgba(10,20,40,0.06);background:#fff;">
-      </a>
+      <!-- zone connexion supprimée (fonctionnalité désactivée) -->
     </div>
   </header>
 
@@ -141,20 +144,17 @@
         <button class="tab" role="tab" data-target="Cycle_3.html">Cycle 3</button>
       </div>
 
-      <div class="search-wrapper">
-        <label for="site-search" class="sr-only">Barre de recherche</label>
-        <input id="site-search" class="site-search" type="search" placeholder="Rechercher..." aria-autocomplete="list" aria-controls="search-suggestions" autocomplete="off">
-        <ul id="search-suggestions" class="suggestions" role="listbox" aria-label="Suggestions de recherche"></ul>
-      </div>
+      <!-- recherche retirée -->
     </div>
   </div>
 
   
-    <section class="card account-area" aria-labelledby="contactTitle" style="margin-top:24px">
+    <main class="container" id="main">
+    <section class="card account-area" aria-labelledby="contactTitle">
       <h2 id="contactTitle">Formulaire de contact</h2>
       <p class="small-muted">Envoyez votre message au créateur du site. Les messages sont conservés localement pour être consultés depuis le compte créateur.</p>
 
-<form id="contactForm" method="post" onsubmit="return false;">
+<form id="contactForm" method="post">
   <div class="form-grid">
     <label for="contact-email">Votre adresse mail</label>
     <input id="contact-email" name="email" type="email" placeholder="adresse@mail.fr" required>
@@ -167,34 +167,34 @@
   </div>
 
   <div class="form-actions">
-    <div style="margin-right:auto" class="small-muted" id="contact-msg" aria-live="polite"></div>
+    <div class="small-muted mr-auto" id="contact-msg" aria-live="polite"></div>
     <button id="btnSend" type="submit" class="btn btn-primary">ENVOYER</button>
   </div>
 </form>
 
-      <div class="msg-list" id="msgListContainer" aria-live="polite" style="display:none">
+      <div class="msg-list hidden" id="msgListContainer" aria-live="polite">
         <h3>Boîte de réception (créateur)</h3>
         <div id="msgList"></div>
       </div>
     </section>
-  </main>
+    </main>
 
   <footer class="site-footer" role="contentinfo" aria-label="Pied de page">
     <div class="footer-panels">
       <div class="footer-panel panel-left" aria-hidden="false">
         <h4>A propos</h4>
         <ol>
-          <li>Sources : <a href="Sources.html">Références et documents officiels</a></li>
-          <li>Mentions légales : <a href="Mentions_légales.html">Informations légales</a></li>
-          <li>Gestion des données : <a href="Gestion_données_cookies.html">Données personnelles et cookies</a></li>
+          <li><a href="Sources.html">Références et documents officiels</a></li>
+          <li><a href="Mentions_légales.html">Informations légales</a></li>
+          
+          <li><a href="Conditions_utilisation.html">Conditions d'utilisation</a></li>
         </ol>
       </div>
 
       <div class="footer-panel panel-right" aria-hidden="false">
         <h4>Aide</h4>
         <ol>
-          <li>Formulaire de contact : <a href="Formulaire_contact.html">Contact</a></li>
-          <li>Foire aux questions : <a href="Foire_questions.html">FAQ</a></li>
+          <li><a href="Formulaire_contact.html">Contact</a></li>
         </ol>
       </div>
     </div>
@@ -219,42 +219,14 @@
       });
     })();
 
-    // recherche (suggestions + historique) - inchangé
-    (function(){
-      const input = document.getElementById('site-search');
-      const sugg = document.getElementById('search-suggestions');
-      const STORAGE_KEY = 'site_search_history_v1';
-      const siteIndex = [
-        'Français','Mathématiques','Motricité','Arts plastiques','Education musicale',
-        'Explorer le monde','Le temps','L\'espace','Le vivant','La matière',
-        'Enseignement moral et civique','Education à la vie affective et relationnelle',
-        'Langues vivantes','Histoire','Géographie','Sciences et technologies','EPS'
-      ];
-
-      function loadHistory(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; } }
-      function saveHistory(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0,20))); }
-      function makeSuggestionList(q){ const hist = loadHistory().filter(h => h.toLowerCase().includes(q.toLowerCase())); const indexed = siteIndex.filter(k => k.toLowerCase().includes(q.toLowerCase()) && !hist.includes(k)).slice(0,8); return [...hist, ...indexed].slice(0,8); }
-      function renderSuggestions(items){ sugg.innerHTML = ''; if (!items.length) { sugg.style.display = 'none'; return; } items.forEach(it => { const li = document.createElement('li'); li.textContent = it; li.tabIndex = 0; li.addEventListener('click', () => selectSuggestion(it)); li.addEventListener('keydown', e => { if (e.key==='Enter') selectSuggestion(it); }); sugg.appendChild(li); }); sugg.style.display = 'block'; }
-      function selectSuggestion(value){ input.value = value; addToHistory(value); sugg.style.display = 'none'; input.focus(); }
-      function addToHistory(q){ if (!q || !q.trim()) return; const list = loadHistory(); const idx = list.findIndex(x => x.toLowerCase()===q.toLowerCase()); if (idx !== -1) list.splice(idx,1); list.unshift(q); saveHistory(list); }
-
-      input.addEventListener('input', e => { const q = e.target.value.trim(); if (!q) { renderSuggestions(loadHistory().slice(0,6)); return; } renderSuggestions(makeSuggestionList(q)); });
-      input.addEventListener('focus', () => renderSuggestions(loadHistory().slice(0,6)));
-      input.addEventListener('blur', () => setTimeout(()=>{ sugg.style.display = 'none'; }, 150));
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          const q = input.value.trim(); if (!q) return; addToHistory(q);
-          const target = { 'cycle 1':'Cycle_1.html','cycle 2':'Cycle_2.html','cycle 3':'Cycle_3.html' }[q.toLowerCase()];
-          if (target) location.href = target; else alert('Recherche enregistrée : ' + q);
-        }
-      });
-    })();
+    // recherche retirée
   </script>
 
   <script>
     (function(){
       const STORAGE_KEY = 'contact_messages_demo_v1';
-      const CUR_KEY = 'current_user_demo';
+      // Auth removed: no persistent creator login available in the public site build
+      // const CUR_KEY = 'current_user_demo';
       const $ = id => document.getElementById(id);
 
       function loadMessages(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ return []; } }
@@ -263,11 +235,13 @@
       function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
       function showStatus(text, ok=true){
-        const el = $('contact-msg'); el.textContent = text; el.style.color = ok ? '' : '#a33';
+        const el = $('contact-msg'); el.textContent = text; el.style.color = ok ? '#1e7b4b' : '#a33';
         setTimeout(()=>{ if(el.textContent === text) el.textContent=''; }, 5000);
       }
 
-      $('btnSend').addEventListener('click', ()=>{
+      const form = $('contactForm');
+      function handleSend(e){
+        if(e && e.preventDefault) e.preventDefault();
         const email = ($('contact-email')||{}).value.trim();
         const subject = ($('contact-subject')||{}).value.trim();
         const body = ($('contact-body')||{}).value.trim();
@@ -276,12 +250,17 @@
         const id = Date.now().toString(36);
         messages.unshift({ id, email, subject, body, created: new Date().toISOString(), status:'unread', reply:null });
         saveMessages(messages);
-        showStatus('Message envoyé. Le créateur pourra le consulter et y répondre.');
+
+        // saved locally only (no server)
+
+        showStatus('Message envoyé, nous vous répondrons dans les plus brefs délai');
         $('contact-email').value=''; $('contact-subject').value=''; $('contact-body').value='';
         renderInboxIfCreator();
-      });
+      }
 
-      function isCreatorLogged(){ try{ const cur = JSON.parse(localStorage.getItem(CUR_KEY)||'null'); return cur && cur.username && cur.username.toLowerCase()==='azura'; }catch(e){return false;} }
+      form.addEventListener('submit', handleSend);
+
+      function isCreatorLogged(){ return false; }
 
       function renderInboxIfCreator(){
         const container = $('msgListContainer');

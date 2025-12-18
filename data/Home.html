@@ -3,17 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>kit éducatif pour l'école primaire — Accueil</title>
-  <link rel="stylesheet" href="../css/page_web.css">
+  <title>L'école dans ta poche — Accueil</title>
+  <link rel="stylesheet" href="../css/page_web2.css">
 </head>
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <h1 class="site-title">kit éducatif pour l'école primaire</h1>
+      <h1 class="site-title">L'école dans ta poche</h1>
 
-      <a href="Connection.html" class="account-link" title="Se connecter" style="margin-left:auto;display:inline-flex;align-items:center;">
-        <img src="https://cdn-icons-png.flaticon.com/512/5087/5087592.png" alt="Se connecter" style="width:36px;height:36px;display:block;border-radius:6px;border:1px solid rgba(10,20,40,0.06);background:#fff;">
-      </a>
     </div>
   </header>
 
@@ -26,18 +23,13 @@
         <button class="tab" role="tab" data-target="Cycle_3.html">Cycle 3</button>
       </div>
 
-      <div class="search-wrapper">
-        <label for="site-search" class="sr-only">Barre de recherche</label>
-        <input id="site-search" class="site-search" type="search" placeholder="Rechercher..." aria-autocomplete="list" aria-controls="search-suggestions" autocomplete="off">
-        <ul id="search-suggestions" class="suggestions" role="listbox" aria-label="Suggestions de recherche"></ul>
-      </div>
     </div>
   </div>
 
   <main class="container" id="main">
     <section class="card">
       <h2>Présentation</h2>
-      <p>Bienvenue — cette plateforme propose des dispositifs clés en main pour les parents et les professeurs : fiches séances, évaluations, projets et activités à imprimer ou adapter. Les pages des cycles (Cycle 1 / Cycle 2 / Cycle 3) contiendront les ressources détaillées.</p>
+      <p>Bienvenue sur L'école dans ta poche. Ici, vous trouverez des ressources conçues par des enseignants pour des enseignants et parents : fiches, activités et évaluations prêtes à l'emploi, simples à prendre en main et à adapter. Tout est offert gratuitement pour un usage pédagogique non commercial et aligné sur les programmes officiels, pour vous permettre de gagner du temps et de rester concentré sur l'essentiel : la réussite des élèves.</p>
 
       <h3>Objectifs</h3>
       <ul>
@@ -53,17 +45,17 @@
       <div class="footer-panel panel-left" aria-hidden="false">
         <h4>A propos</h4>
         <ol>
-          <li>Sources : <a href="Sources.html">Références et documents officiels</a></li>
-          <li>Mentions légales : <a href="Mentions_légales.html">Informations légales</a></li>
-          <li>Gestion des données : <a href="Gestion_données_cookies.html">Données personnelles et cookies</a></li>
+          <li><a href="Sources.html">Références et documents officiels</a></li>
+          <li><a href="Mentions_légales.html">Informations légales</a></li>
+          
+          <li><a href="Conditions_utilisation.html">Conditions d'utilisation</a></li>
         </ol>
       </div>
 
       <div class="footer-panel panel-right" aria-hidden="false">
         <h4>Aide</h4>
         <ol>
-          <li>Formulaire de contact : <a href="Formulaire_contact.html">Contact</a></li>
-          <li>Foire aux questions : <a href="Foire_questions.html">FAQ</a></li>
+          <li><a href="Formulaire_contact.html">Contact</a></li>
         </ol>
       </div>
     </div>
@@ -88,63 +80,6 @@
       });
     })();
 
-    // recherche (suggestions + historique) - inchangé
-    (function(){
-      const input = document.getElementById('site-search');
-      const sugg = document.getElementById('search-suggestions');
-      const STORAGE_KEY = 'site_search_history_v1';
-      const siteIndex = [
-        'Français','Mathématiques','Motricité','Arts plastiques','Education musicale',
-        'Explorer le monde','Le temps','L\'espace','Le vivant','La matière',
-        'Enseignement moral et civique','Education à la vie affective et relationnelle',
-        'Langues vivantes','Histoire','Géographie','Sciences et technologies','EPS'
-      ];
-
-      function loadHistory(){ try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e){ return []; } }
-      function saveHistory(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(0,20))); }
-      function makeSuggestionList(q){
-        const hist = loadHistory().filter(h => h.toLowerCase().includes(q.toLowerCase()));
-        const indexed = siteIndex.filter(k => k.toLowerCase().includes(q.toLowerCase()) && !hist.includes(k)).slice(0,8);
-        return [...hist, ...indexed].slice(0,8);
-      }
-      function renderSuggestions(items){
-        sugg.innerHTML = '';
-        if (!items.length) { sugg.style.display = 'none'; return; }
-        items.forEach(it => {
-          const li = document.createElement('li');
-          li.textContent = it; li.tabIndex = 0;
-          li.addEventListener('click', () => selectSuggestion(it));
-          li.addEventListener('keydown', e => { if (e.key==='Enter') selectSuggestion(it); });
-          sugg.appendChild(li);
-        });
-        sugg.style.display = 'block';
-      }
-      function selectSuggestion(value){ input.value = value; addToHistory(value); sugg.style.display = 'none'; input.focus(); }
-      function addToHistory(q){ if (!q || !q.trim()) return; const list = loadHistory(); const idx = list.findIndex(x => x.toLowerCase()===q.toLowerCase()); if (idx !== -1) list.splice(idx,1); list.unshift(q); saveHistory(list); }
-
-      if (input){
-        input.addEventListener('input', e => {
-          const q = e.target.value.trim();
-          if (!q) { renderSuggestions(loadHistory().slice(0,6)); return; }
-          renderSuggestions(makeSuggestionList(q));
-        });
-        input.addEventListener('focus', () => { renderSuggestions(loadHistory().slice(0,6)); });
-        input.addEventListener('blur', () => { setTimeout(()=>{ sugg.style.display = 'none'; }, 150); });
-        input.addEventListener('keydown', e => {
-          if (e.key === 'Enter') {
-            const q = input.value.trim();
-            if (!q) return;
-            addToHistory(q);
-            const target = {
-              'cycle 1':'Cycle_1.html','cycle 2':'Cycle_2.html','cycle 3':'Cycle_3.html',
-              'cycle_1':'Cycle_1.html','cycle_2':'Cycle_2.html','cycle_3':'Cycle_3.html'
-            }[q.toLowerCase()];
-            if (target) location.href = target;
-            else alert('Recherche enregistrée : ' + q);
-          }
-        });
-      }
-    })();
   </script>
 </body>
 </html>

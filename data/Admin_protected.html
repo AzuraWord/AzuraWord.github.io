@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin local — L'école dans ta poche</title>
+  <style>
+    body{ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial; margin:20px; color:#111 }
+    .box{ max-width:980px; margin:0 auto }
+    .card{ background:#fff; border-radius:10px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.04) }
+    label{ display:block; margin:8px 0 6px }
+    input[type="password"], input[type="file"]{ padding:10px; width:100%; box-sizing:border-box; border-radius:8px; border:1px solid #ddd }
+    table{ width:100%; border-collapse:collapse; margin-top:12px }
+    th,td{ padding:8px 10px; border-bottom:1px solid #eee; text-align:left; vertical-align:top }
+    .muted{ color:#666; font-size:0.95rem }
+    .btn{ display:inline-block; padding:8px 12px; border-radius:8px; background:#5b8def; color:#fff; text-decoration:none; cursor:pointer; border:0 }
+    .danger{ background:#e25b5b }
+    .small{ font-size:0.9rem }
+    pre{ white-space:pre-wrap; word-break:break-word; background:#fbfbff; padding:10px; border-radius:6px }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>L'admin local</h1>
+    <p class="muted">Page locale protégée par mot de passe — fonctionne sans serveur. Les messages proviennent du navigateur (localStorage) ou d'un fichier JSON importé.</p>
+
+    <div id="login" class="card">
+      <h3>Connexion</h3>
+      <label for="pwd">Mot de passe</label>
+      <input id="pwd" type="password" placeholder="Mot de passe">
+      <div style="margin-top:10px">
+        <button id="btnLogin" class="btn">Se connecter</button>
+      </div>
+    </div>
+
+    <div id="app" style="display:none">
+      <div class="card">
+        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+          <div>
+            <button id="btnRefresh" class="btn">Rafraichir</button>
+            <button id="btnExport" class="btn">Exporter JSON</button>
+            <button id="btnClearLocal" class="btn danger">Supprimer tous (local)</button>
+          </div>
+          <div>
+            <label class="small">Importer JSON&nbsp;<input id="fileImport" type="file" accept="application/json"></label>
+          </div>
+        </div>
+
+        <div id="listArea">
+          <h3 style="margin-top:12px">Messages</h3>
+          <div id="noMsg" class="muted">Aucun message trouvé.</div>
+          <table id="msgTable" style="display:none"><thead><tr><th>Sujet</th><th>De</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+
+      <div id="viewer" class="card" style="margin-top:12px;display:none">
+        <h3>Détails</h3>
+        <div id="detailMeta" class="muted"></div>
+        <pre id="detailBody"></pre>
+        <div style="margin-top:8px">
+          <button id="btnMarkRead" class="btn">Marquer lu</button>
+          <button id="btnReply" class="btn">Répondre (mailto)</button>
+          <button id="btnDelete" class="btn danger">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const PASSWORD = 'Balancetonquoi69'; // changez ici si besoin
+      const KEY = 'contact_messages_demo_v1';
+      const $ = id => document.getElementById(id);
+
+      function loadFromLocal(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
+      function saveToLocal(list){ localStorage.setItem(KEY, JSON.stringify(list)); }
+
+      function renderList(){
+        const list = loadFromLocal();
+        const tb = $('msgTable'); const body = tb.querySelector('tbody'); body.innerHTML='';
+        if(!list || list.length===0){ $('noMsg').style.display='block'; tb.style.display='none'; return; }
+        $('noMsg').style.display='none'; tb.style.display='table';
+        list.forEach((m, idx)=>{
+          const tr = document.createElement('tr');
+          const subj = document.createElement('td'); subj.textContent = m.subject||'(sans sujet)';
+          const from = document.createElement('td'); from.textContent = m.email||'(inconnu)';
+          const date = document.createElement('td'); date.textContent = m.created ? new Date(m.created).toLocaleString() : '';
+          const stat = document.createElement('td'); stat.textContent = m.status||'';
+          const act = document.createElement('td');
+          const btn = document.createElement('button'); btn.textContent='Voir'; btn.className='btn'; btn.addEventListener('click', ()=>{ showDetail(idx); });
+          act.appendChild(btn);
+          tr.appendChild(subj); tr.appendChild(from); tr.appendChild(date); tr.appendChild(stat); tr.appendChild(act);
+          body.appendChild(tr);
+        });
+      }
+
+      let currentIndex = null;
+      function showDetail(i){
+        const list = loadFromLocal(); if(!list[i]) return;
+        currentIndex = i; const m = list[i];
+        $('detailMeta').textContent = `Sujet: ${m.subject||'(sans sujet)'} — De: ${m.email||'(inconnu)'} — ${m.created? new Date(m.created).toLocaleString():''}`;
+        $('detailBody').textContent = m.body || m.message || '';
+        $('viewer').style.display='block';
+      }
+
+      function markRead(i){ const list = loadFromLocal(); if(!list[i]) return; list[i].status='read'; saveToLocal(list); renderList(); }
+      function delMsg(i){ const list = loadFromLocal(); if(!list[i]) return; if(!confirm('Supprimer ce message ?')) return; list.splice(i,1); saveToLocal(list); renderList(); $('viewer').style.display='none'; }
+
+      $('btnLogin').addEventListener('click', ()=>{
+        const v = $('pwd').value||''; if(v === PASSWORD){ $('login').style.display='none'; $('app').style.display='block'; renderList(); } else { alert('Mot de passe incorrect'); }
+      });
+
+      $('btnRefresh').addEventListener('click', renderList);
+      $('btnExport').addEventListener('click', ()=>{
+        const list = loadFromLocal() || [];
+        const blob = new Blob([JSON.stringify(list, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'contact_messages.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      });
+
+      $('btnClearLocal').addEventListener('click', ()=>{ if(confirm('Supprimer tous les messages stockés localement ?')){ saveToLocal([]); renderList(); $('viewer').style.display='none'; } });
+
+      $('fileImport').addEventListener('change', (e)=>{
+        const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ()=>{
+          try{ const arr = JSON.parse(r.result||'[]'); if(!Array.isArray(arr)) throw 0; const local = loadFromLocal(); const merged = (arr.concat(local)); saveToLocal(merged); alert('Import OK — messages fusionnés.'); renderList(); }catch(err){ alert('Fichier JSON invalide'); }
+        }; r.readAsText(f);
+      });
+
+      $('btnMarkRead').addEventListener('click', ()=>{ if(currentIndex===null) return; markRead(currentIndex); renderList(); });
+      $('btnDelete').addEventListener('click', ()=>{ if(currentIndex===null) return; delMsg(currentIndex); });
+      $('btnReply').addEventListener('click', ()=>{ if(currentIndex===null) return; const list = loadFromLocal(); const m = list[currentIndex]; const subject = 'RE: '+(m.subject||''); const body = encodeURIComponent('\n\n---\nRéponse : '); window.open('mailto:'+encodeURIComponent(m.email)+'?subject='+encodeURIComponent(subject)+'&body='+body, '_blank'); });
+
+      // Attempt to load data/contact_messages.json if accessible (file:// may block)
+      function tryLoadJsonFile(){
+        fetch('data/contact_messages.json').then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(arr=>{ if(Array.isArray(arr) && arr.length){ const local = loadFromLocal(); saveToLocal(arr.concat(local)); renderList(); }}).catch(()=>{/* ignore */});
+      }
+      tryLoadJsonFile();
+    })();
+  </script>
+</body>
+</html>

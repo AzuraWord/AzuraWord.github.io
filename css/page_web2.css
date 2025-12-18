@@ -1,0 +1,167 @@
+:root{
+  --bg: #F2F4F8; 
+  --pastel-blue: #9CC0E6;
+  --pastel-pink: #DFA0B0;
+  --pastel-yellow: #BFA1E6;
+
+  --title-red: #581428;
+  --section-pink: #7A2B42;
+  --sub-blue: #0D2A3D;
+  --body-blue: #162E45;
+  --muted: #6b6b6b;
+  --link-violet: #4A2A69;
+
+  --card-bg: #FCF9FF;
+  --radius: 12px;
+  /* make main content take almost full viewport width while keeping side padding */
+  --maxw: calc(100% - 36px);
+
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--body-blue);
+}
+
+/* reset & basics */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--body-blue);font-size:16px}
+
+/* Force page to use column flex layout so footer can stick to bottom */
+body{display:flex;flex-direction:column;min-height:100vh}
+main.container, main#main{flex:1 0 auto}
+/* Make generic container fill remaining vertical space when used as main content */
+.container{flex:1 0 auto}
+
+/* Reserve scrollbar gutter to prevent layout shift when vertical scrollbar appears.
+   Modern browsers support `scrollbar-gutter: stable`; provide a fallback for older
+   browsers using a feature-query that forces a persistent vertical scrollbar. */
+html{ scrollbar-gutter: stable; }
+@supports not (scrollbar-gutter: stable) {
+  html{ overflow-y: scroll; }
+}
+
+/* Make the persistent scrollbar visually blend with the page background
+   so the reserved gutter is 'invisible' (not a white bar). Provide WebKit
+   and Firefox rules; other browsers will use their defaults. */
+/* Firefox: set track color to page background and thumb to subtle shade */
+* { scrollbar-width: thin; scrollbar-color: rgba(15,30,50,0.10) var(--bg); }
+
+/* WebKit-based browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar { width: 14px; height: 14px; background: transparent; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(15,30,50,0.10); border-radius:10px; border:4px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: rgba(15,30,50,0.16); }
+
+/* Ensure footer does not shrink and stays after main content */
+footer{flex-shrink:0}
+img,svg{max-width:100%;height:auto}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* alias used in some pages */
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* small muted text used site-wide */
+.small-muted{ color: var(--muted); font-size:0.95rem; }
+
+/* Utility helpers (used to replace inline styles) */
+.mt-12{ margin-top:12px }
+.mt-8{ margin-top:8px }
+.mr-auto{ margin-right:auto }
+.hidden{ display:none !important }
+.flex-between{ display:flex; justify-content:space-between; align-items:center; gap:12px }
+.font-600{ font-weight:600 }
+.font-sm{ font-size:0.95rem }
+
+/* header full width */
+.site-header{width:100%;background:var(--pastel-yellow);box-shadow:0 6px 18px rgba(11,22,56,0.12);margin:0;position:static;top:auto;z-index:initial}
+.site-header-inner{max-width:var(--maxw);margin:0 auto;padding:14px 20px;display:flex;align-items:center}
+
+/* title */
+.site-title{
+  margin:0;
+  font-size:2.2rem;
+  font-weight:800;
+  line-height:1;
+  display:inline-block;
+  padding:12px 18px;
+  border-radius:10px;
+  background: var(--pastel-yellow);
+  color:#fff;
+  box-shadow:0 6px 18px rgba(15,30,80,0.10) inset;
+}
+
+/* tabs */
+.tabs-bar{width:100%;background:linear-gradient(180deg,var(--pastel-blue),#E6F1FB);border-bottom:1px solid rgba(10,20,40,0.08);box-shadow:0 8px 22px rgba(15,30,80,0.09);margin:0}
+.tabs-inner{max-width:var(--maxw);margin:0 auto;padding:12px 18px;display:flex;gap:12px;align-items:center}
+.tabs-group{display:flex;gap:10px;flex:1 1 auto;justify-content:stretch}
+.tab{flex:1 1 0;min-width:80px;text-align:center;padding:9px 14px;border-radius:10px;text-decoration:none;color:var(--sub-blue);background:transparent;box-shadow:0 6px 18px rgba(15,30,80,0.06);font-weight:800;transition:transform .12s ease, box-shadow .12s ease}
+.tab:hover,.tab:focus{transform:translateY(-2px);outline:none;box-shadow:0 12px 28px rgba(15,30,80,0.1)}
+.tab.active{background:linear-gradient(180deg,#E9D6FB,var(--pastel-yellow));color:var(--title-red);box-shadow:0 10px 30px rgba(11,22,56,0.16)}
+
+
+.container{max-width:var(--maxw);margin:26px auto;padding:0 18px;box-sizing:border-box}
+
+/* Uniform central blocks: ensure account-area and main content cards share the
+  same max width and consistent spacing from the header across all pages. */
+.account-area, main.account-area, .container.account-area { max-width: var(--maxw); margin: 0 auto; padding: 0 18px; }
+
+/* Ensure the central card inside account-area follows the same sizing */
+.account-area .card, .container .card { max-width: var(--maxw); margin: 18px auto; }
+
+/* Ensure all pages have a centered main content column and a consistent 'card' (middle square) */
+.container .card{max-width:var(--maxw);margin:18px auto;padding:28px;border-radius:14px;background:var(--card-bg);box-shadow:0 18px 46px rgba(15,30,80,0.12);border:1px solid rgba(10,20,40,0.10)}
+.card{background:var(--card-bg);padding:22px;border-radius:var(--radius);box-shadow:0 16px 40px rgba(15,30,80,0.14);border:1px solid rgba(10,20,40,0.12)}
+.card h2{color:var(--section-pink);margin-top:0}
+.card h3{color:var(--sub-blue);margin-bottom:6px}
+.card p,.card li{color:var(--body-blue);line-height:1.6}
+.card ul{padding-left:22px;margin-top:10px}
+
+.sources{max-width:var(--maxw);margin:20px auto 16px;padding:14px 18px;color:var(--body-blue);font-size:0.95rem;border-top:1px dashed rgba(10,20,40,0.06)}
+.sources ul{margin:8px 0 0 18px}
+.sources a{font-weight:800;color:var(--link-violet)}
+
+.footer-panels{max-width:var(--maxw);margin:14px auto 36px;padding:0 18px;display:flex;gap:20px;justify-content:space-between;align-items:flex-start}
+.footer-panel{background:var(--pastel-blue);color:var(--sub-blue);padding:16px;border-radius:12px;box-shadow:0 12px 30px rgba(11,22,56,0.08);width:48%;border:1px solid rgba(10,20,40,0.08)}
+.footer-panel h4{margin:0 0 8px;font-weight:800;color:var(--sub-blue)}
+.footer-panel ol{margin:0;padding-left:18px;color:var(--sub-blue)}
+.footer-panel li{margin:6px 0;line-height:1.5}
+.footer-panel a{font-weight:800;color:var(--sub-blue);text-decoration:none}
+.footer-panel a:hover{color:var(--title-red)}
+
+/* links */
+a{font-weight:800;color:var(--link-violet);text-decoration:none}
+a:hover{color:var(--sub-blue)}
+
+/* responsive tweaks */
+@media (max-width:980px){ :root{ --maxw: calc(100% - 32px); } .site-title{font-size:1.9rem} }
+
+/* cleaned empty media query */
+@media (max-width:720px){
+  .tabs-inner{padding:10px 12px;gap:8px}
+  .tabs-group{flex-direction:row;gap:8px;overflow:auto;justify-content:flex-start}
+  .tab{flex:0 0 auto;padding:8px 10px;font-size:0.95rem}
+  .container{margin:12px auto;padding:0 12px}
+  .footer-panels{flex-direction:column;padding:0 12px}
+  .footer-panel{width:100%}
+}
+
+
+.card.account-area { margin-top: 24px; }
+.faq-list[aria-live] { margin-top: 16px; }
+
+/* Normalized tabs layout (no aggressive overrides) */
+.tabs-inner{max-width:var(--maxw);margin:0 auto;padding:12px 18px;box-sizing:border-box;display:flex;gap:12px;align-items:center}
+.tabs-group{display:flex;gap:10px;align-items:center}
+.tabs-bar{width:100%;display:block}
+.tabs-bar .tabs-inner{display:flex;justify-content:space-between;align-items:center}
+
+/* Accordion shared styles (centralisé) */
+.accordion{ position:relative; padding-right:56px; }
+.toggle-btn{ background:transparent; border:0; padding:6px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; position:relative; z-index:2; }
+.toggle-btn img{ width:20px; height:20px; display:block; transition: transform .22s ease-in-out; transform-origin:center; transform: rotate(180deg); }
+.toggle-btn[aria-expanded="true"] img{ transform: rotate(0deg); }
+.toggle-row{ position:absolute; top:12px; right:12px; display:flex; align-items:center; }
+.details{ max-height: 0; overflow: hidden; opacity: 0; transition: max-height .28s ease, opacity .18s ease; }
+.details.open{ opacity: 1; max-height: 800px; }
+@media (max-width:520px){ .accordion{ padding-right:44px; } .toggle-row{ right:8px; top:10px; } .toggle-btn img{ width:18px;height:18px; } }
+
+/* Enforce consistent central widths across all pages, even if pages include local styles */
+.site-header-inner, .tabs-inner, .container, .footer-panels, .card, .account-area { width:100%; max-width:var(--maxw); box-sizing:border-box; margin-left:auto; margin-right:auto; }
